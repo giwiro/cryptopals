@@ -1,8 +1,8 @@
-#include "stdio.h"
-#include "stdlib.h"
-#include "string.h"
-#include "ctype.h"
-#include "math.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#include <math.h>
 
 #define MAX_LENGTH 100
 
@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
     size_t s = strlen(argv[1]);
     char m[MAX_LENGTH];
     strncpy(m, argv[1], MAX_LENGTH);
-    size_t out_size = ceil(s / 3.0) * 2;
+    // size_t out_size = ceil((double)s / 3.0) * 2;
     // printf("s: %zu\tout_size: %zu\n", s, out_size);
     for (int i = 0; i < s; i+=3) {
         uint8_t fi = char_to_hexbyte(m[i]);
