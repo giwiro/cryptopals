@@ -1,4 +1,5 @@
 #include "stdio.h"
+#include "stdlib.h"
 #include "ctype.h"
 #include "string.h"
 
@@ -10,36 +11,46 @@ char char_to_hex(const char src) {
     return l - '0';
 }
 
+char* verify(char str[], char x) {
+    int len = strlen(str);
+    char plain[MAX_LENGTH];
+    int count = 0;
+    int idx = 0;
+
+    bzero(plain, MAX_LENGTH);
+
+    for (int j = 0; j < len; j += 2) {
+        char fh = char_to_hex(str[j]);
+        char sh = char_to_hex(str[j + 1]);
+        unsigned char h = (fh << 4) | sh; 
+        plain[idx] = h ^ x;
+        char low = tolower(plain[idx]);
+        if (isalpha(low) || low == ' ') count++;
+        idx++;
+    }
+    float score = (float)count/(len / 2);
+    if (score >= 0.85) {
+        char* r = (char*)malloc(len * sizeof(char));
+        memcpy(r, plain, len * sizeof(char));
+        return r;
+    }
+
+    return NULL;
+}
+
 int main() {
     char str[MAX_LENGTH];
     scanf("%s", (char *)&str);
 
-    int len = strlen(str);
-
     char plain[MAX_LENGTH];
 
-    // printf("=> %s\n", str);
-
     for(int i = 1; i <= 255; i++) {
-        int count = 0;
-        int idx = 0;
-        bzero(plain, MAX_LENGTH);
-        for (int j = 0; j < len; j += 2) {
-            char fh = char_to_hex(str[j]);
-            char sh = char_to_hex(str[j + 1]);
-            unsigned char h = (fh << 4) | sh; 
-            ////  printf("[%c%c] %d <=> %d => %d ^ %d = %d\n", str[j], str[j + 1], fh, sh, h, i, h ^ i);
-            plain[idx] = h ^ i;
-            char low = tolower(plain[idx]);
-            if (isalpha(low)) count++;
-            idx++;
+        char* t = verify(str, (char)i);
+        if (t != NULL) {
+            printf("[%d(%c)] %s\n", i, i, t);
+            free(t);
         }
-        float score = (float)count/(len / 2);
-        // printf("count=%d\tlen/2=%d\t=>%0.2f\n", count, len / 2, ((float)count / (len / 2)));
-        if (score >= 0.75) {
-            printf("[%d - %c] %s\n", i, i, plain);
-        }
-        // printf("----------------------------\n");
     }
+
     return 0;
 }
