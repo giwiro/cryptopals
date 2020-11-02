@@ -40,14 +40,17 @@ char* verify(char str[], char x) {
 
 int main() {
     char str[MAX_LENGTH];
-    scanf("%s", (char *)&str);
-
-    for(int i = 1; i <= 255; i++) {
-        char* t = verify(str, (char)i);
-        if (t != NULL) {
-            printf("[%d(%c)] %s\n", i, i, t);
-            free(t);
+    
+    while(scanf("%s", (char *)&str) != -1) {
+        for(int i = 1; i <= 255; i++) {
+            char* t = verify(str, (char)i);
+            if (t != NULL) {
+                printf("=> %s\n", str);
+                printf("\t[%d(%c)] %s\n", i, i, t);
+                free(t);
+            }
         }
+        bzero(str, MAX_LENGTH);
     }
 
     return 0;
